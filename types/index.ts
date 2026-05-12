@@ -5,6 +5,7 @@ export interface Licencia {
   rol: 'admin' | 'user'
   vencimiento: string | null
   activa: boolean
+  email?: string
 }
 
 export interface Sesion {

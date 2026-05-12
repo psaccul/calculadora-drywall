@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 
 export default function PanelAdmin({ msg }: { msg:(m:string,t?:string)=>void }) {
   const [licencias, setLicencias] = useState<any[]>([])
-  const [form, setForm] = useState({clave:'',usuario:'',rol:'user',vencimiento:''})
+  const [form, setForm] = useState({clave:'',usuario:'',rol:'user',vencimiento:'',email:''})
   const hoy = new Date().toISOString().slice(0,10)
 
   const cargar = async () => {
@@ -21,9 +21,10 @@ export default function PanelAdmin({ msg }: { msg:(m:string,t?:string)=>void }) 
       rol: form.rol,
       vencimiento: form.vencimiento || null,
       activa: true,
+      email: form.email || null,
     }])
     msg('Licencia creada ✓')
-    setForm({clave:'',usuario:'',rol:'user',vencimiento:''})
+    setForm({clave:'',usuario:'',rol:'user',vencimiento:'',email:''})
     cargar()
   }
 
@@ -53,6 +54,7 @@ export default function PanelAdmin({ msg }: { msg:(m:string,t?:string)=>void }) 
             <div key={l.id} className="lic-row">
               <span className="lic-key">{l.clave}</span>
               <span className="lic-user">{l.usuario}</span>
+              <span style={{fontSize:11,color:'var(--t2)',minWidth:140}}>{l.email||'—'}</span>
               <span style={{color:l.rol==='admin'?'var(--acc)':'var(--t2)',fontSize:10,fontWeight:700,minWidth:50}}>{l.rol}</span>
               <span className="lic-exp">{l.vencimiento||'Sin vencimiento'}</span>
               <span className={`lic-status ${vencida||!l.activa?'lic-exp-badge':'lic-ok'}`}>
@@ -76,6 +78,7 @@ export default function PanelAdmin({ msg }: { msg:(m:string,t?:string)=>void }) 
             </select>
           </div>
           <div className="fg"><label>Vencimiento (opcional)</label><input type="date" value={form.vencimiento} onChange={e=>setForm(f=>({...f,vencimiento:e.target.value}))}/></div>
+          <div className="fg"><label>Email (para recuperar clave)</label><input type="email" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} placeholder="usuario@email.com"/></div>
         </div>
         <div style={{display:'flex',justifyContent:'flex-end'}}>
           <button className="btn btn-acc" onClick={agregar}>Crear licencia</button>
